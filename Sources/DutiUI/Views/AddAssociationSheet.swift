@@ -110,7 +110,7 @@ struct AddAssociationSheet: View {
 
                             ScrollView(.horizontal, showsIndicators: false) {
                                 HStack(spacing: 8) {
-                                    ForEach(items.prefix(12)) { item in
+                                    ForEach(items.prefix(6)) { item in
                                         extensionChip(item)
                                     }
                                 }

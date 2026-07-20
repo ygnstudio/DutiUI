@@ -376,5 +376,185 @@
     "displayName": { "zh-Hans": "SQL 文件", "en": "SQL File" },
     "category": "development",
     "preferredUTI": null
+  },
+  {
+    "extension": "rb",
+    "displayName": { "zh-Hans": "Ruby 脚本", "en": "Ruby Script" },
+    "category": "development",
+    "preferredUTI": "public.ruby-script"
+  },
+  {
+    "extension": "php",
+    "displayName": { "zh-Hans": "PHP 脚本", "en": "PHP Script" },
+    "category": "development",
+    "preferredUTI": "public.php-script"
+  },
+  {
+    "extension": "lua",
+    "displayName": { "zh-Hans": "Lua 脚本", "en": "Lua Script" },
+    "category": "development",
+    "preferredUTI": null
+  },
+  {
+    "extension": "r",
+    "displayName": { "zh-Hans": "R 脚本", "en": "R Script" },
+    "category": "development",
+    "preferredUTI": null
+  },
+  {
+    "extension": "dart",
+    "displayName": { "zh-Hans": "Dart 源文件", "en": "Dart Source" },
+    "category": "development",
+    "preferredUTI": null
+  },
+  {
+    "extension": "vue",
+    "displayName": { "zh-Hans": "Vue 组件", "en": "Vue Component" },
+    "category": "development",
+    "preferredUTI": null
+  },
+  {
+    "extension": "log",
+    "displayName": { "zh-Hans": "日志文件", "en": "Log File" },
+    "category": "document",
+    "preferredUTI": null
+  },
+  {
+    "extension": "xlsx",
+    "displayName": { "zh-Hans": "Excel 表格", "en": "Excel Spreadsheet" },
+    "category": "document",
+    "preferredUTI": "org.openxmlformats.spreadsheetml.sheet"
+  },
+  {
+    "extension": "pptx",
+    "displayName": { "zh-Hans": "PowerPoint 演示文稿", "en": "PowerPoint Presentation" },
+    "category": "document",
+    "preferredUTI": "org.openxmlformats.presentationml.presentation"
+  },
+  {
+    "extension": "numbers",
+    "displayName": { "zh-Hans": "Numbers 表格", "en": "Numbers Spreadsheet" },
+    "category": "document",
+    "preferredUTI": "com.apple.iwork.numbers.sffnumbers"
+  },
+  {
+    "extension": "key",
+    "displayName": { "zh-Hans": "Keynote 演示文稿", "en": "Keynote Presentation" },
+    "category": "document",
+    "preferredUTI": "com.apple.iwork.keynote.sffkey"
+  },
+  {
+    "extension": "ico",
+    "displayName": { "zh-Hans": "图标文件", "en": "Icon File" },
+    "category": "image",
+    "preferredUTI": "com.microsoft.ico"
+  },
+  {
+    "extension": "psd",
+    "displayName": { "zh-Hans": "Photoshop 文档", "en": "Photoshop Document" },
+    "category": "image",
+    "preferredUTI": "com.adobe.photoshop-image"
+  },
+  {
+    "extension": "wmv",
+    "displayName": { "zh-Hans": "WMV 视频", "en": "WMV Video" },
+    "category": "video",
+    "preferredUTI": "com.microsoft.windows-media-wmv"
+  },
+  {
+    "extension": "flv",
+    "displayName": { "zh-Hans": "FLV 视频", "en": "FLV Video" },
+    "category": "video",
+    "preferredUTI": null
+  },
+  {
+    "extension": "mid",
+    "displayName": { "zh-Hans": "MIDI 音乐", "en": "MIDI Audio" },
+    "category": "audio",
+    "preferredUTI": "public.midi-audio"
+  },
+  {
+    "extension": "midi",
+    "displayName": { "zh-Hans": "MIDI 音乐", "en": "MIDI Audio" },
+    "category": "audio",
+    "preferredUTI": "public.midi-audio"
+  },
+  {
+    "extension": "iso",
+    "displayName": { "zh-Hans": "光盘镜像", "en": "ISO Image" },
+    "category": "archive",
+    "preferredUTI": "public.iso-image"
+  },
+  {
+    "extension": "dmg",
+    "displayName": { "zh-Hans": "磁盘映像", "en": "Disk Image" },
+    "category": "archive",
+    "preferredUTI": "com.apple.disk-image"
+  },
+  {
+    "extension": "ttf",
+    "displayName": { "zh-Hans": "TrueType 字体", "en": "TrueType Font" },
+    "category": "document",
+    "preferredUTI": "public.truetype-font"
+  },
+  {
+    "extension": "otf",
+    "displayName": { "zh-Hans": "OpenType 字体", "en": "OpenType Font" },
+    "category": "document",
+    "preferredUTI": "public.opentype-font"
+  },
+  {
+    "extension": "plist",
+    "displayName": { "zh-Hans": "属性列表", "en": "Property List" },
+    "category": "development",
+    "preferredUTI": "com.apple.property-list"
+  },
+  {
+    "extension": "conf",
+    "displayName": { "zh-Hans": "配置文件", "en": "Config File" },
+    "category": "development",
+    "preferredUTI": null
+  },
+  {
+    "extension": "cfg",
+    "displayName": { "zh-Hans": "配置文件", "en": "Config File" },
+    "category": "development",
+    "preferredUTI": null
+  },
+  {
+    "extension": "env",
+    "displayName": { "zh-Hans": "环境变量文件", "en": "Env File" },
+    "category": "development",
+    "preferredUTI": null
+  },
+  {
+    "extension": "ipynb",
+    "displayName": { "zh-Hans": "Jupyter 笔记本", "en": "Jupyter Notebook" },
+    "category": "development",
+    "preferredUTI": null
+  },
+  {
+    "extension": "lock",
+    "displayName": { "zh-Hans": "依赖锁文件", "en": "Lock File" },
+    "category": "development",
+    "preferredUTI": null
+  },
+  {
+    "extension": "cs",
+    "displayName": { "zh-Hans": "C# 源文件", "en": "C# Source" },
+    "category": "development",
+    "preferredUTI": null
+  },
+  {
+    "extension": "mm",
+    "displayName": { "zh-Hans": "Objective-C++ 源文件", "en": "ObjC++ Source" },
+    "category": "development",
+    "preferredUTI": null
+  },
+  {
+    "extension": "m",
+    "displayName": { "zh-Hans": "Objective-C 源文件", "en": "ObjC Source" },
+    "category": "development",
+    "preferredUTI": null
   }
 ]
