@@ -29,6 +29,13 @@ struct AddAssociationSheet: View {
             }
         }
         .frame(minWidth: 480, minHeight: 400)
+        .toolbar {
+            ToolbarItem(placement: .cancellationAction) {
+                Button(Locale.current.isChinese ? "关闭" : "Close") {
+                    dismiss()
+                }
+            }
+        }
     }
 
     // MARK: - Search View

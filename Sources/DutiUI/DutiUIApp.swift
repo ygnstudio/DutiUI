@@ -2,8 +2,20 @@ import SwiftUI
 import AppKit
 import UserNotifications
 
+/// 自定义 AppDelegate 处理激活策略等
+final class AppDelegate: NSObject, NSApplicationDelegate {
+    func applicationDidFinishLaunching(_ notification: Notification) {
+        // 隐藏 Dock 图标（LSUIElement = true）
+        NSApp.setActivationPolicy(.accessory)
+
+        // 请求通知权限
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { _, _ in }
+    }
+}
+
 @main
 struct DutiUIApp: App {
+    @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @StateObject private var appState = AppState()
     @Environment(\.openWindow) private var openWindow
 
@@ -53,17 +65,8 @@ struct DutiUIApp: App {
         }
     }
 
-    init() {
-        // 隐藏 Dock 图标（LSUIElement = true）
-        NSApp.setActivationPolicy(.accessory)
-
-        // 请求通知权限
-        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { _, _ in }
-    }
-
     private func openMainWindow() {
         openWindow(id: "main")
-        // 将应用置于前台
         NSApp.activate(ignoringOtherApps: true)
     }
 }

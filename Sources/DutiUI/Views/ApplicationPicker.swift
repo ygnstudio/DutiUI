@@ -7,7 +7,6 @@ struct ApplicationPicker: View {
 
     @StateObject private var availableApps = StateValue<[AppInfo]>([])
     @StateObject private var isLoading = StateValue(true)
-    @StateObject private var showCustomPicker = StateValue(false)
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -27,25 +26,57 @@ struct ApplicationPicker: View {
                 .font(.caption)
                 .foregroundColor(.secondary)
             } else {
-                List(availableApps.value, id: \.bundleIdentifier, selection: $selectedApp) { app in
-                    HStack(spacing: 10) {
-                        if let icon = app.icon {
-                            Image(nsImage: icon)
-                                .resizable()
-                                .frame(width: 28, height: 28)
-                        } else {
-                            Image(systemName: "app.fill")
-                                .resizable()
-                                .frame(width: 28, height: 28)
-                                .foregroundColor(.secondary)
-                        }
+                ScrollView {
+                    LazyVStack(spacing: 0) {
+                        ForEach(availableApps.value) { app in
+                            Button {
+                                selectedApp = app
+                            } label: {
+                                HStack(spacing: 10) {
+                                    if let icon = app.icon {
+                                        Image(nsImage: icon)
+                                            .resizable()
+                                            .frame(width: 28, height: 28)
+                                    } else {
+                                        Image(systemName: "app.fill")
+                                            .resizable()
+                                            .frame(width: 28, height: 28)
+                                            .foregroundColor(.secondary)
+                                    }
 
-                        Text(app.name)
-                            .font(.body)
+                                    Text(app.name)
+                                        .font(.body)
+                                        .foregroundColor(.primary)
+
+                                    Spacer()
+
+                                    // 选中标记
+                                    if selectedApp?.bundleIdentifier == app.bundleIdentifier {
+                                        Image(systemName: "checkmark.circle.fill")
+                                            .foregroundColor(.accentColor)
+                                            .font(.system(size: 18))
+                                    }
+                                }
+                                .padding(.horizontal, 10)
+                                .padding(.vertical, 8)
+                                .contentShape(Rectangle())
+                            }
+                            .buttonStyle(.plain)
+                            .background(
+                                selectedApp?.bundleIdentifier == app.bundleIdentifier
+                                    ? Color.accentColor.opacity(0.12)
+                                    : Color.clear
+                            )
+                            .cornerRadius(6)
+
+                            if app.bundleIdentifier != availableApps.value.last?.bundleIdentifier {
+                                Divider()
+                                    .padding(.leading, 48)
+                            }
+                        }
                     }
-                    .padding(.vertical, 2)
+                    .padding(4)
                 }
-                .listStyle(.plain)
                 .frame(minHeight: 120)
                 .overlay(
                     RoundedRectangle(cornerRadius: 8)
@@ -75,6 +106,9 @@ struct ApplicationPicker: View {
 
         let apps = appState.associationService.getAvailableApplications(forUTI: uti)
         availableApps.value = apps.sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
+
+        // 如果还没有选中项，且 binding 中有值，标记为选中
+        // （首次加载时 selectedApp 已经在 EditAssociationView 中预设好了）
     }
 
     private func selectFromFinder() {

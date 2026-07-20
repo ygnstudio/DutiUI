@@ -116,18 +116,6 @@ struct EditExistingAssociationView: View {
 
             Divider()
 
-            // 当前目标应用
-            VStack(alignment: .leading, spacing: 6) {
-                Text(Locale.current.isChinese ? "目标默认应用" : "Target Default App")
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
-                HStack(spacing: 8) {
-                    Image(systemName: "app.fill")
-                    Text(association.targetApplicationName)
-                        .font(.headline)
-                }
-            }
-
             // 选择新应用
             VStack(alignment: .leading, spacing: 8) {
                 Text(Locale.current.isChinese ? "选择新的默认应用" : "Select New Default App")
@@ -137,20 +125,20 @@ struct EditExistingAssociationView: View {
                 ApplicationPicker(uti: association.uti, selectedApp: $selectedApp.value)
             }
 
-            // 锁定开关
-            VStack(alignment: .leading, spacing: 2) {
-                HStack {
-                    Text(Locale.current.isChinese ? "锁定状态" : "Lock Status")
-                        .font(.subheadline)
-                    Text(association.isLocked
-                        ? (Locale.current.isChinese ? "已锁定" : "Locked")
-                        : (Locale.current.isChinese ? "未锁定" : "Unlocked")
-                    )
-                    .font(.caption)
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 2)
-                    .background(association.isLocked ? Color.green.opacity(0.15) : Color.secondary.opacity(0.15))
-                    .cornerRadius(4)
+            // 当前默认应用信息
+            if let app = selectedApp.value {
+                HStack(spacing: 6) {
+                    Text(Locale.current.isChinese ? "将设为默认：" : "Will set as default:")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                    Text(app.name)
+                        .font(.caption)
+                        .fontWeight(.medium)
+                    if app.bundleIdentifier == association.targetBundleIdentifier {
+                        Text(Locale.current.isChinese ? "(当前)" : "(current)")
+                            .font(.caption2)
+                            .foregroundColor(.secondary)
+                    }
                 }
             }
 
@@ -164,19 +152,37 @@ struct EditExistingAssociationView: View {
                 }
                 .keyboardShortcut(.escape)
 
-                if let app = selectedApp.value {
-                    Button(Locale.current.isChinese ? "保存" : "Save") {
+                Button(Locale.current.isChinese ? "保存" : "Save") {
+                    if let app = selectedApp.value {
                         Task {
                             await appState.setDefaultApp(for: association, to: app)
                             dismiss()
                         }
                     }
-                    .keyboardShortcut(.return)
-                    .buttonStyle(.borderedProminent)
                 }
+                .keyboardShortcut(.return)
+                .buttonStyle(.borderedProminent)
+                .disabled(selectedApp.value == nil)
             }
         }
         .padding(24)
         .frame(width: 480, height: 440)
+        .onAppear {
+            // 预选当前目标应用
+            if selectedApp.value == nil {
+                let icon: NSImage? = {
+                    if let path = association.targetApplicationPath {
+                        return NSWorkspace.shared.icon(forFile: path)
+                    }
+                    return nil
+                }()
+                selectedApp.value = AppInfo(
+                    name: association.targetApplicationName,
+                    bundleIdentifier: association.targetBundleIdentifier,
+                    path: association.targetApplicationPath,
+                    icon: icon
+                )
+            }
+        }
     }
 }
