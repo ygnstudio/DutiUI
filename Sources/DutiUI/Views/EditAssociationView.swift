@@ -59,6 +59,40 @@ struct EditAssociationView: View {
                 ApplicationPicker(uti: uti.value, selectedApp: $selectedApp.value)
             }
 
+            // 已选择的应用预览
+            if let selected = selectedApp.value {
+                VStack(alignment: .leading, spacing: 6) {
+                    Text(Locale.current.isChinese ? "将设为默认" : "Will Set as Default")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+
+                    HStack(spacing: 8) {
+                        if let icon = selected.icon {
+                            Image(nsImage: icon)
+                                .resizable()
+                                .frame(width: 24, height: 24)
+                        } else {
+                            Image(systemName: "app.fill")
+                                .resizable()
+                                .frame(width: 24, height: 24)
+                                .foregroundColor(.secondary)
+                        }
+                        Text(selected.name)
+                            .font(.headline)
+
+                        if selected.bundleIdentifier == currentDefaultApp.value?.bundleIdentifier {
+                            Text(Locale.current.isChinese ? "(当前)" : "(current)")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                    .padding(10)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .background(Color.secondary.opacity(0.08))
+                    .cornerRadius(8)
+                }
+            }
+
             // 锁定开关
             if selectedApp.value != nil {
                 Toggle(isOn: $isLocked.value) {
