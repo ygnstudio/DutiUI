@@ -64,38 +64,22 @@ jobs:
           # PkgInfo
           echo -n 'APPL????' > "${APP_DIR}/Contents/PkgInfo"
 
-          # Info.plist
+          # Info.plist — 不设 LSUIElement，由代码 NSApp.setActivationPolicy 控制
           cat > "${APP_DIR}/Contents/Info.plist" << 'PLIST'
           <?xml version="1.0" encoding="UTF-8"?>
           <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
           <plist version="1.0">
           <dict>
-              <key>CFBundleDevelopmentRegion</key>
-              <string>zh-Hans</string>
-              <key>CFBundleDisplayName</key>
-              <string>DutiUI</string>
-              <key>CFBundleExecutable</key>
-              <string>DutiUI</string>
-              <key>CFBundleIconFile</key>
-              <string>AppIcon</string>
-              <key>CFBundleIdentifier</key>
-              <string>com.ygnstudio.DutiUI</string>
-              <key>CFBundleInfoDictionaryVersion</key>
-              <string>6.0</string>
-              <key>CFBundleName</key>
-              <string>DutiUI</string>
-              <key>CFBundlePackageType</key>
-              <string>APPL</string>
-              <key>CFBundleShortVersionString</key>
-              <string>${GITHUB_REF_NAME#v}</string>
-              <key>CFBundleVersion</key>
-              <string>1</string>
-              <key>LSMinimumSystemVersion</key>
-              <string>14.0</string>
-              <key>LSUIElement</key>
-              <true/>
-              <key>NSHighResolutionCapable</key>
-              <true/>
+              <key>CFBundleExecutable</key><string>DutiUI</string>
+              <key>CFBundleIdentifier</key><string>com.ygnstudio.DutiUI</string>
+              <key>CFBundleName</key><string>DutiUI</string>
+              <key>CFBundleDisplayName</key><string>DutiUI</string>
+              <key>CFBundleIconFile</key><string>AppIcon</string>
+              <key>CFBundlePackageType</key><string>APPL</string>
+              <key>CFBundleShortVersionString</key><string>${GITHUB_REF_NAME#v}</string>
+              <key>CFBundleVersion</key><string>1</string>
+              <key>LSMinimumSystemVersion</key><string>14.0</string>
+              <key>NSHighResolutionCapable</key><true/>
           </dict>
           </plist>
           PLIST

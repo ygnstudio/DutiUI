@@ -54,8 +54,6 @@ cat > "$APP_DIR/Contents/Info.plist" << 'PLIST'
     <string>DutiUI</string>
     <key>CFBundleIconFile</key>
     <string>AppIcon</string>
-    <key>CFBundleIconName</key>
-    <string>AppIcon</string>
     <key>CFBundleIdentifier</key>
     <string>com.ygnstudio.DutiUI</string>
     <key>CFBundleInfoDictionaryVersion</key>
@@ -70,8 +68,6 @@ cat > "$APP_DIR/Contents/Info.plist" << 'PLIST'
     <string>1</string>
     <key>LSMinimumSystemVersion</key>
     <string>14.0</string>
-    <key>LSUIElement</key>
-    <true/>
     <key>NSHighResolutionCapable</key>
     <true/>
 </dict>

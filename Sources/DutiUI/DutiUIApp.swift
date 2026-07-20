@@ -5,23 +5,24 @@ import OSLog
 
 let logger = Logger(subsystem: "com.ygnstudio.DutiUI", category: "app")
 
-/// 自定义 AppDelegate 处理通知权限等
 final class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(_ notification: Notification) {
-        logger.info("DutiUI launched")
+        logger.info("DutiUI launched — setting activation policy")
 
-        // 安全请求通知权限（在非 bundle 环境下可能失败）
-        if Bundle.main.bundleURL.pathExtension == "app" {
-            UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { granted, error in
-                logger.info("Notifications: granted=\(granted), error=\(String(describing: error))")
+        // 隐藏 Dock 图标（用代码而非 Info.plist LSUIElement）
+        NSApp.setActivationPolicy(.accessory)
+
+        // 通知权限
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { _, _ in }
+
+        // 延迟确保 MenuBarExtra 已初始化，然后自动打开主窗口
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            // Auto-open main window for debugging
+            if let window = NSApp.windows.first(where: { $0.title == "DutiUI" }) {
+                window.makeKeyAndOrderFront(nil)
             }
-        } else {
-            logger.warning("Skipping notification auth: not running from .app bundle")
+            NSApp.activate(ignoringOtherApps: true)
         }
-    }
-
-    func applicationWillTerminate(_ notification: Notification) {
-        logger.info("DutiUI terminating")
     }
 }
 
@@ -32,7 +33,6 @@ struct DutiUIApp: App {
     @Environment(\.openWindow) private var openWindow
 
     var body: some Scene {
-        // 菜单栏图标
         MenuBarExtra {
             Button {
                 openMainWindow()
@@ -56,34 +56,31 @@ struct DutiUIApp: App {
             }
             .keyboardShortcut("q")
         } label: {
-            // 使用 Text + Image 组合确保始终可见
-            HStack(spacing: 2) {
-                Image(systemName: menuBarIconName)
-                    .font(.system(size: 14))
-            }
+            Image(nsImage: menuBarIcon)
         }
 
-        // 主窗口
         Window("DutiUI", id: "main") {
             MainWindow()
                 .environmentObject(appState)
                 .frame(minWidth: 680, minHeight: 460)
+                .onAppear {
+                    logger.info("MainWindow appeared")
+                }
         }
         .windowResizability(.contentMinSize)
         .defaultSize(width: 780, height: 540)
 
-        // 设置窗口
         Settings {
             SettingsView()
                 .environmentObject(appState)
         }
     }
 
-    private var menuBarIconName: String {
+    private var menuBarIcon: NSImage {
         if appState.protectionService.isRunning && !appState.protectionService.isPaused {
-            return "shield.checkered"
+            return MenuBarIcon.shieldChecked()
         }
-        return "shield.slash"
+        return MenuBarIcon.shield()
     }
 
     private func openMainWindow() {
