@@ -15,75 +15,89 @@ final class ExtensionCatalog: Sendable {
     // MARK: - Loading
 
     private func loadBuiltinExtensions() {
-        guard let url = Bundle.module.url(
-            forResource: "builtin_extensions",
-            withExtension: "json"
-        ) else {
-            print("[ExtensionCatalog] Failed to locate builtin_extensions.json in bundle")
+        // 尝试多种方式找到资源文件
+        guard let data = loadBuiltinExtensionsData() else {
+            print("[ExtensionCatalog] Could not load builtin_extensions.json, using empty catalog")
             return
         }
 
         do {
-            let data = try Data(contentsOf: url)
             let decoder = JSONDecoder()
             extensions = try decoder.decode([ExtensionInfo].self, from: data)
         } catch {
-            print("[ExtensionCatalog] Failed to load extensions: \(error)")
+            print("[ExtensionCatalog] Failed to parse extensions: \(error)")
         }
+    }
+
+    /// 从多种可能的路径加载资源数据
+    private func loadBuiltinExtensionsData() -> Data? {
+        let resourceName = "builtin_extensions"
+        let resourceExt = "json"
+        let bundleName = "DutiUI_DutiUI"
+
+        // 方法 1：Bundle.module（SPM 编译时路径，仅开发环境有效）
+        if let url = Bundle.module.url(forResource: resourceName, withExtension: resourceExt),
+           let data = try? Data(contentsOf: url) {
+            return data
+        }
+
+        // 方法 2：在主 bundle 的 Resources 目录中查找资源 bundle
+        if let resourcesURL = Bundle.main.resourceURL {
+            let bundleURL = resourcesURL.appendingPathComponent("\(bundleName).bundle")
+            if let resourceURL = Bundle(url: bundleURL)?.url(forResource: resourceName, withExtension: resourceExt),
+               let data = try? Data(contentsOf: resourceURL) {
+                return data
+            }
+        }
+
+        // 方法 3：在主 bundle 中直接查找
+        if let url = Bundle.main.url(forResource: resourceName, withExtension: resourceExt),
+           let data = try? Data(contentsOf: url) {
+            return data
+        }
+
+        // 方法 4：遍历 Resources 目录查找 .bundle
+        if let resourcesURL = Bundle.main.resourceURL,
+           let contents = try? FileManager.default.contentsOfDirectory(at: resourcesURL, includingPropertiesForKeys: nil) {
+            for url in contents where url.pathExtension == "bundle" {
+                if let bundle = Bundle(url: url),
+                   let resourceURL = bundle.url(forResource: resourceName, withExtension: resourceExt),
+                   let data = try? Data(contentsOf: resourceURL) {
+                    return data
+                }
+            }
+        }
+
+        print("[ExtensionCatalog] Failed to locate \(resourceName).\(resourceExt) in any bundle location")
+        return nil
     }
 
     // MARK: - Search
 
     /// 搜索扩展名
-    /// - Parameter query: 用户输入（支持扩展名、中文名、英文名、分类名）
-    /// - Returns: 匹配的 ExtensionInfo 列表
     func search(_ query: String) -> [ExtensionInfo] {
         let normalizedQuery = query.lowercased().trimmingCharacters(in: .whitespaces)
         guard !normalizedQuery.isEmpty else {
             return extensions.sorted { $0.ext < $1.ext }
         }
 
-        // 去掉开头可能存在的点号
         let cleanQuery = normalizedQuery.replacingOccurrences(of: ".", with: "")
 
         return extensions.filter { info in
-            // 扩展名匹配
-            if info.ext.lowercased().contains(cleanQuery) {
-                return true
-            }
-            // 中文名匹配
-            if let zh = info.displayName["zh-Hans"], zh.lowercased().contains(cleanQuery) {
-                return true
-            }
-            // 英文名匹配
-            if let en = info.displayName["en"], en.lowercased().contains(cleanQuery) {
-                return true
-            }
-            // 分类匹配
-            if info.localizedCategory.lowercased().contains(cleanQuery) {
-                return true
-            }
-            // 分类英文名匹配
-            if info.category.lowercased().contains(cleanQuery) {
-                return true
-            }
+            if info.ext.lowercased().contains(cleanQuery) { return true }
+            if let zh = info.displayName["zh-Hans"], zh.lowercased().contains(cleanQuery) { return true }
+            if let en = info.displayName["en"], en.lowercased().contains(cleanQuery) { return true }
+            if info.localizedCategory.lowercased().contains(cleanQuery) { return true }
+            if info.category.lowercased().contains(cleanQuery) { return true }
             return false
         }.sorted { $0.ext < $1.ext }
     }
 
-    /// 精确查找某个扩展名
     func find(extension ext: String) -> ExtensionInfo? {
         let normalized = ManagedAssociation.normalizeExtension(ext)
         return extensions.first { $0.ext == normalized }
     }
 
-    /// 获取所有扩展名
-    func allExtensions() -> [ExtensionInfo] {
-        extensions
-    }
-
-    /// 重新加载（开发调试用）
-    func reload() {
-        loadBuiltinExtensions()
-    }
+    func allExtensions() -> [ExtensionInfo] { extensions }
+    func reload() { loadBuiltinExtensions() }
 }
