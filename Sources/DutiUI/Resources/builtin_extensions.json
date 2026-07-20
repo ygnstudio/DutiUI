@@ -1,0 +1,380 @@
+[
+  {
+    "extension": "txt",
+    "displayName": { "zh-Hans": "纯文本文档", "en": "Plain Text Document" },
+    "category": "document",
+    "preferredUTI": "public.plain-text"
+  },
+  {
+    "extension": "md",
+    "displayName": { "zh-Hans": "Markdown 文档", "en": "Markdown Document" },
+    "category": "document",
+    "preferredUTI": "net.daringfireball.markdown"
+  },
+  {
+    "extension": "pdf",
+    "displayName": { "zh-Hans": "PDF 文档", "en": "PDF Document" },
+    "category": "document",
+    "preferredUTI": "com.adobe.pdf"
+  },
+  {
+    "extension": "rtf",
+    "displayName": { "zh-Hans": "富文本格式", "en": "Rich Text Format" },
+    "category": "document",
+    "preferredUTI": "public.rtf"
+  },
+  {
+    "extension": "doc",
+    "displayName": { "zh-Hans": "Word 文档", "en": "Word Document" },
+    "category": "document",
+    "preferredUTI": "com.microsoft.word.doc"
+  },
+  {
+    "extension": "docx",
+    "displayName": { "zh-Hans": "Word 文档", "en": "Word Document" },
+    "category": "document",
+    "preferredUTI": "org.openxmlformats.wordprocessingml.document"
+  },
+  {
+    "extension": "pages",
+    "displayName": { "zh-Hans": "Pages 文档", "en": "Pages Document" },
+    "category": "document",
+    "preferredUTI": "com.apple.iwork.pages.sffpages"
+  },
+  {
+    "extension": "epub",
+    "displayName": { "zh-Hans": "电子书", "en": "EPUB eBook" },
+    "category": "document",
+    "preferredUTI": "org.idpf.epub-container"
+  },
+  {
+    "extension": "csv",
+    "displayName": { "zh-Hans": "CSV 表格", "en": "CSV Spreadsheet" },
+    "category": "document",
+    "preferredUTI": "public.comma-separated-values-text"
+  },
+  {
+    "extension": "jpg",
+    "displayName": { "zh-Hans": "JPEG 图片", "en": "JPEG Image" },
+    "category": "image",
+    "preferredUTI": "public.jpeg"
+  },
+  {
+    "extension": "jpeg",
+    "displayName": { "zh-Hans": "JPEG 图片", "en": "JPEG Image" },
+    "category": "image",
+    "preferredUTI": "public.jpeg"
+  },
+  {
+    "extension": "png",
+    "displayName": { "zh-Hans": "PNG 图片", "en": "PNG Image" },
+    "category": "image",
+    "preferredUTI": "public.png"
+  },
+  {
+    "extension": "gif",
+    "displayName": { "zh-Hans": "GIF 图片", "en": "GIF Image" },
+    "category": "image",
+    "preferredUTI": "com.compuserve.gif"
+  },
+  {
+    "extension": "webp",
+    "displayName": { "zh-Hans": "WebP 图片", "en": "WebP Image" },
+    "category": "image",
+    "preferredUTI": "org.webmproject.webp"
+  },
+  {
+    "extension": "heic",
+    "displayName": { "zh-Hans": "HEIC 图片", "en": "HEIC Image" },
+    "category": "image",
+    "preferredUTI": "public.heic"
+  },
+  {
+    "extension": "svg",
+    "displayName": { "zh-Hans": "SVG 矢量图", "en": "SVG Image" },
+    "category": "image",
+    "preferredUTI": "public.svg-image"
+  },
+  {
+    "extension": "bmp",
+    "displayName": { "zh-Hans": "BMP 图片", "en": "BMP Image" },
+    "category": "image",
+    "preferredUTI": "com.microsoft.bmp"
+  },
+  {
+    "extension": "tiff",
+    "displayName": { "zh-Hans": "TIFF 图片", "en": "TIFF Image" },
+    "category": "image",
+    "preferredUTI": "public.tiff"
+  },
+  {
+    "extension": "mp4",
+    "displayName": { "zh-Hans": "MP4 视频", "en": "MP4 Video" },
+    "category": "video",
+    "preferredUTI": "public.mpeg-4"
+  },
+  {
+    "extension": "mov",
+    "displayName": { "zh-Hans": "QuickTime 视频", "en": "QuickTime Video" },
+    "category": "video",
+    "preferredUTI": "com.apple.quicktime-movie"
+  },
+  {
+    "extension": "mkv",
+    "displayName": { "zh-Hans": "MKV 视频", "en": "MKV Video" },
+    "category": "video",
+    "preferredUTI": "org.matroska.mkv"
+  },
+  {
+    "extension": "avi",
+    "displayName": { "zh-Hans": "AVI 视频", "en": "AVI Video" },
+    "category": "video",
+    "preferredUTI": "public.avi"
+  },
+  {
+    "extension": "webm",
+    "displayName": { "zh-Hans": "WebM 视频", "en": "WebM Video" },
+    "category": "video",
+    "preferredUTI": "org.webmproject.webm"
+  },
+  {
+    "extension": "m4v",
+    "displayName": { "zh-Hans": "M4V 视频", "en": "M4V Video" },
+    "category": "video",
+    "preferredUTI": "com.apple.m4v-video"
+  },
+  {
+    "extension": "mp3",
+    "displayName": { "zh-Hans": "MP3 音频", "en": "MP3 Audio" },
+    "category": "audio",
+    "preferredUTI": "public.mp3"
+  },
+  {
+    "extension": "wav",
+    "displayName": { "zh-Hans": "WAV 音频", "en": "WAV Audio" },
+    "category": "audio",
+    "preferredUTI": "com.microsoft.waveform-audio"
+  },
+  {
+    "extension": "aac",
+    "displayName": { "zh-Hans": "AAC 音频", "en": "AAC Audio" },
+    "category": "audio",
+    "preferredUTI": "public.aac-audio"
+  },
+  {
+    "extension": "flac",
+    "displayName": { "zh-Hans": "FLAC 无损音频", "en": "FLAC Audio" },
+    "category": "audio",
+    "preferredUTI": "org.xiph.flac"
+  },
+  {
+    "extension": "m4a",
+    "displayName": { "zh-Hans": "M4A 音频", "en": "M4A Audio" },
+    "category": "audio",
+    "preferredUTI": "com.apple.m4a-audio"
+  },
+  {
+    "extension": "ogg",
+    "displayName": { "zh-Hans": "OGG 音频", "en": "OGG Audio" },
+    "category": "audio",
+    "preferredUTI": "org.xiph.ogg"
+  },
+  {
+    "extension": "zip",
+    "displayName": { "zh-Hans": "ZIP 压缩包", "en": "ZIP Archive" },
+    "category": "archive",
+    "preferredUTI": "com.pkware.zip-archive"
+  },
+  {
+    "extension": "rar",
+    "displayName": { "zh-Hans": "RAR 压缩包", "en": "RAR Archive" },
+    "category": "archive",
+    "preferredUTI": "com.rarlab.rar-archive"
+  },
+  {
+    "extension": "7z",
+    "displayName": { "zh-Hans": "7z 压缩包", "en": "7z Archive" },
+    "category": "archive",
+    "preferredUTI": "org.7-zip.7-zip-archive"
+  },
+  {
+    "extension": "tar",
+    "displayName": { "zh-Hans": "TAR 归档", "en": "TAR Archive" },
+    "category": "archive",
+    "preferredUTI": "public.tar-archive"
+  },
+  {
+    "extension": "gz",
+    "displayName": { "zh-Hans": "Gzip 压缩包", "en": "Gzip Archive" },
+    "category": "archive",
+    "preferredUTI": "org.gnu.gnu-zip-archive"
+  },
+  {
+    "extension": "bz2",
+    "displayName": { "zh-Hans": "Bzip2 压缩包", "en": "Bzip2 Archive" },
+    "category": "archive",
+    "preferredUTI": "org.gnu.gnu-zip-bzip2"
+  },
+  {
+    "extension": "xz",
+    "displayName": { "zh-Hans": "XZ 压缩包", "en": "XZ Archive" },
+    "category": "archive",
+    "preferredUTI": "org.tukaani.xz-archive"
+  },
+  {
+    "extension": "json",
+    "displayName": { "zh-Hans": "JSON 文件", "en": "JSON File" },
+    "category": "development",
+    "preferredUTI": "public.json"
+  },
+  {
+    "extension": "yaml",
+    "displayName": { "zh-Hans": "YAML 文件", "en": "YAML File" },
+    "category": "development",
+    "preferredUTI": "public.yaml"
+  },
+  {
+    "extension": "yml",
+    "displayName": { "zh-Hans": "YAML 文件", "en": "YAML File" },
+    "category": "development",
+    "preferredUTI": "public.yaml"
+  },
+  {
+    "extension": "xml",
+    "displayName": { "zh-Hans": "XML 文件", "en": "XML File" },
+    "category": "development",
+    "preferredUTI": "public.xml"
+  },
+  {
+    "extension": "html",
+    "displayName": { "zh-Hans": "HTML 网页", "en": "HTML Page" },
+    "category": "development",
+    "preferredUTI": "public.html"
+  },
+  {
+    "extension": "css",
+    "displayName": { "zh-Hans": "CSS 样式表", "en": "CSS Stylesheet" },
+    "category": "development",
+    "preferredUTI": "public.css"
+  },
+  {
+    "extension": "scss",
+    "displayName": { "zh-Hans": "SCSS 样式表", "en": "SCSS Stylesheet" },
+    "category": "development",
+    "preferredUTI": null
+  },
+  {
+    "extension": "js",
+    "displayName": { "zh-Hans": "JavaScript 文件", "en": "JavaScript File" },
+    "category": "development",
+    "preferredUTI": "com.netscape.javascript-source"
+  },
+  {
+    "extension": "jsx",
+    "displayName": { "zh-Hans": "JSX 文件", "en": "JSX File" },
+    "category": "development",
+    "preferredUTI": null
+  },
+  {
+    "extension": "ts",
+    "displayName": { "zh-Hans": "TypeScript 文件", "en": "TypeScript File" },
+    "category": "development",
+    "preferredUTI": null
+  },
+  {
+    "extension": "tsx",
+    "displayName": { "zh-Hans": "TSX 文件", "en": "TSX File" },
+    "category": "development",
+    "preferredUTI": null
+  },
+  {
+    "extension": "py",
+    "displayName": { "zh-Hans": "Python 脚本", "en": "Python Script" },
+    "category": "development",
+    "preferredUTI": "public.python-script"
+  },
+  {
+    "extension": "go",
+    "displayName": { "zh-Hans": "Go 源文件", "en": "Go Source File" },
+    "category": "development",
+    "preferredUTI": null
+  },
+  {
+    "extension": "rs",
+    "displayName": { "zh-Hans": "Rust 源文件", "en": "Rust Source File" },
+    "category": "development",
+    "preferredUTI": null
+  },
+  {
+    "extension": "swift",
+    "displayName": { "zh-Hans": "Swift 源文件", "en": "Swift Source File" },
+    "category": "development",
+    "preferredUTI": "public.swift-source"
+  },
+  {
+    "extension": "c",
+    "displayName": { "zh-Hans": "C 源文件", "en": "C Source File" },
+    "category": "development",
+    "preferredUTI": "public.c-source"
+  },
+  {
+    "extension": "h",
+    "displayName": { "zh-Hans": "C 头文件", "en": "C Header File" },
+    "category": "development",
+    "preferredUTI": "public.c-header"
+  },
+  {
+    "extension": "cpp",
+    "displayName": { "zh-Hans": "C++ 源文件", "en": "C++ Source File" },
+    "category": "development",
+    "preferredUTI": "public.c-plus-plus-source"
+  },
+  {
+    "extension": "hpp",
+    "displayName": { "zh-Hans": "C++ 头文件", "en": "C++ Header File" },
+    "category": "development",
+    "preferredUTI": "public.c-plus-plus-header"
+  },
+  {
+    "extension": "java",
+    "displayName": { "zh-Hans": "Java 源文件", "en": "Java Source File" },
+    "category": "development",
+    "preferredUTI": null
+  },
+  {
+    "extension": "kt",
+    "displayName": { "zh-Hans": "Kotlin 源文件", "en": "Kotlin Source File" },
+    "category": "development",
+    "preferredUTI": null
+  },
+  {
+    "extension": "sh",
+    "displayName": { "zh-Hans": "Shell 脚本", "en": "Shell Script" },
+    "category": "development",
+    "preferredUTI": "public.shell-script"
+  },
+  {
+    "extension": "zsh",
+    "displayName": { "zh-Hans": "Zsh 脚本", "en": "Zsh Script" },
+    "category": "development",
+    "preferredUTI": null
+  },
+  {
+    "extension": "toml",
+    "displayName": { "zh-Hans": "TOML 配置文件", "en": "TOML Config" },
+    "category": "development",
+    "preferredUTI": null
+  },
+  {
+    "extension": "ini",
+    "displayName": { "zh-Hans": "INI 配置文件", "en": "INI Config" },
+    "category": "development",
+    "preferredUTI": null
+  },
+  {
+    "extension": "sql",
+    "displayName": { "zh-Hans": "SQL 文件", "en": "SQL File" },
+    "category": "development",
+    "preferredUTI": null
+  }
+]
