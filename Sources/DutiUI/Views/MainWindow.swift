@@ -22,7 +22,7 @@ struct MainWindow: View {
                 AssociationListView()
 
                 // duti 未安装提示
-                if !appState.dutiInstalled && !appState.associations.isEmpty {
+                if !appState.dutiInstalled {
                     Divider()
                     DutiNotInstalledView()
                 }

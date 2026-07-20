@@ -1,57 +1,77 @@
 import SwiftUI
+import AppKit
 
 struct HistoryView: View {
     @EnvironmentObject var appState: AppState
+    @Environment(\.dismiss) private var dismiss
     @StateObject private var selectedRecord = OptionalStateValue<AssociationHistory>()
 
     var body: some View {
-        VStack(spacing: 0) {
-            // 头部
-            HStack {
-                Text(Locale.current.isChinese ? "最近修改" : "Recent Changes")
-                    .font(.title2)
-                    .fontWeight(.semibold)
+        ZStack {
+            // 透明背景，点击关闭
+            Color.clear
+                .contentShape(Rectangle())
+                .onTapGesture { dismiss() }
 
-                Spacer()
+            VStack(spacing: 0) {
+                // 头部
+                HStack {
+                    Text(Locale.current.isChinese ? "最近修改" : "Recent Changes")
+                        .font(.title2)
+                        .fontWeight(.semibold)
 
-                Text(String(format:
-                    Locale.current.isChinese
-                        ? "最多保留 %d 条记录"
-                        : "Maximum %d records retained",
-                    500
-                ))
-                .font(.caption)
-                .foregroundColor(.secondary)
-            }
-            .padding(16)
-
-            Divider()
-
-            // 内容
-            if appState.history.isEmpty {
-                VStack(spacing: 16) {
                     Spacer()
-                    Image(systemName: "clock.arrow.circlepath")
-                        .font(.system(size: 36))
-                        .foregroundColor(.secondary)
-                    Text(Locale.current.isChinese
-                        ? "暂无修改记录"
-                        : "No change records"
-                    )
-                    .font(.body)
+
+                    Text(String(format:
+                        Locale.current.isChinese
+                            ? "最多保留 %d 条记录"
+                            : "Maximum %d records retained",
+                        500
+                    ))
+                    .font(.caption)
                     .foregroundColor(.secondary)
-                    Spacer()
-                }
-            } else {
-                List(appState.history.sorted(by: { $0.createdAt > $1.createdAt })) { record in
+
                     Button {
-                        selectedRecord.value = record
+                        dismiss()
                     } label: {
-                        historyRow(record)
+                        Image(systemName: "xmark.circle.fill")
+                            .font(.title3)
+                            .foregroundColor(.secondary)
                     }
                     .buttonStyle(.plain)
+                    .help(Locale.current.isChinese ? "关闭" : "Close")
+                    .keyboardShortcut(.escape)
                 }
-                .listStyle(.plain)
+                .padding(16)
+
+                Divider()
+
+                // 内容
+                if appState.history.isEmpty {
+                    VStack(spacing: 16) {
+                        Spacer()
+                        Image(systemName: "clock.arrow.circlepath")
+                            .font(.system(size: 36))
+                            .foregroundColor(.secondary)
+                        Text(Locale.current.isChinese
+                            ? "暂无修改记录"
+                            : "No change records"
+                        )
+                        .font(.body)
+                        .foregroundColor(.secondary)
+                        Spacer()
+                    }
+                } else {
+                    List(appState.history.sorted(by: { $0.createdAt > $1.createdAt })) { record in
+                        Button {
+                            selectedRecord.value = record
+                        } label: {
+                            historyRow(record)
+                        }
+                        .buttonStyle(.plain)
+                    }
+                    .listStyle(.plain)
+                }
             }
         }
         .frame(minWidth: 560, minHeight: 400)

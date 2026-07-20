@@ -1,23 +1,33 @@
 # DutiUI
 
-A macOS menu bar app for managing and locking default application associations for file extensions.
+A macOS menu bar utility that lets you **lock file extensions to specific applications** and automatically restores them when other apps try to take over.
 
-DutiUI lets you select the file extensions you care about (like `.md`, `.pdf`, `.json`) and lock their default applications. When another app tries to take over a locked file type, DutiUI automatically restores your preferred association.
+> **Example**: You want `.md` files to always open with Obsidian, `.pdf` with Preview, and `.json` with VS Code. DutiUI monitors these associations and restores them if any app changes them.
+
+![](screenshots/04_main_with_data_real.png)
+
+## Why DutiUI?
+
+macOS lets apps register themselves as default handlers for file types — often without asking. An app update might silently claim `.pdf` or `.txt`. DutiUI solves this by:
+
+- Letting you **choose which extensions to protect** (not all system types)
+- **Periodically checking** if your preferred defaults have changed
+- **Automatically restoring** them when they do
+- Keeping a **history** of every change and recovery
 
 ## Features
 
-- **Manage default apps** for specific file extensions
-- **Lock associations** to prevent other apps from changing them
-- **Auto-restore** when a locked association is changed
-- **Recent changes history** to track what happened
-- **Launch at login** for continuous protection
-- **Runs in menu bar** — no Dock icon, minimal footprint
-- **Bilingual** — supports English and Simplified Chinese
+- 🛡 **Lock file extensions** to specific apps
+- 🔄 **Auto-restore** changed associations (configurable interval)
+- 📋 **Built-in catalog** of 60+ common file types with Chinese and English names
+- 📊 **Change history** — see what changed and when it was restored
+- 🚀 **Launch at login** with no Dock icon (menu bar only)
+- 🌐 **Bilingual UI** — Simplified Chinese and English
 
 ## Requirements
 
 - macOS 14 (Sonoma) or later
-- [duti](https://github.com/moretension/duti) — required to modify default applications
+- [duti](https://github.com/moretension/duti) — a lightweight command-line tool to manage default apps on macOS
 
 ### Installing duti
 
@@ -25,84 +35,78 @@ DutiUI lets you select the file extensions you care about (like `.md`, `.pdf`, `
 brew install duti
 ```
 
-If Homebrew is not installed, follow the instructions at [brew.sh](https://brew.sh).
+DutiUI detects missing dependencies on launch and provides step-by-step installation instructions.
 
-## Building from Source
+## Quick Start
 
-### Using Xcode
-
-1. Open the project folder in Xcode (`File > Open…`, select the `DutiUI` folder)
-2. Select the `DutiUI` scheme
-3. Press `⌘B` to build or `⌘R` to run
-
-### Using Command Line
+### Download & Run
 
 ```bash
-swift build
-swift run
+git clone https://github.com/ygnstudio/DutiUI.git
+cd DutiUI
+./build_app.sh
+open DutiUI.app
 ```
 
-## Usage
+Or open the project in Xcode and press `⌘R`.
 
-### First Launch
+### Usage
 
-1. Click the shield icon in the menu bar
-2. The main window opens — it's empty
-3. Click **Add File Type** to search for extensions you want to manage
-4. Select a default app for each extension
-5. Toggle **Lock** to enable protection
+1. Click the **shield icon** in the menu bar to open DutiUI
+2. Click **Add File Type** to search for extensions you want to manage
+3. Select a default app for each extension
+4. Toggle **Lock** to enable automatic protection
+5. The app runs in the background — close the window, protection continues
 
-### Locking Behavior
+| Action | Behavior |
+|--------|----------|
+| Left-click menu bar icon | Open / focus main window |
+| Right-click menu bar icon | Open or Quit |
+| Close main window | App keeps running (protection active) |
+| Quit from menu | App fully exits (protection stops) |
 
-> **Important**: DutiUI's "lock" is **not** a system-level block. It works by:
-> 1. Periodically checking the current default app for each locked extension
-> 2. If the default app has changed, automatically restoring your preference
->
-> This means another app can still temporarily change the association, but DutiUI will restore it within the check interval (default: 10 seconds).
+## Project Structure
 
-### Closing the Window
+```
+Sources/DutiUI/
+├── DutiUIApp.swift              # App entry point
+├── AppState.swift               # Global state management
+├── Models/                      # Data models
+├── Services/
+│   ├── AssociationService.swift # UTI resolution + app management
+│   ├── ProtectionService.swift  # Timer-based monitoring + auto-restore
+│   ├── ExtensionCatalog.swift   # Built-in file type database
+│   ├── CommandRunner.swift      # Safe process execution
+│   ├── DutiDetector.swift       # Dependency detection
+│   └── PersistenceController.swift # Local JSON storage
+├── Views/                       # SwiftUI views
+├── Utilities/                   # Helpers
+└── Resources/                   # JSON catalog + localizations
+```
 
-- Closing the main window does **not** quit DutiUI
-- The app continues running in the background
-- Protection remains active
-- Click the menu bar icon to reopen the window
-- To quit, right-click the menu bar icon and select **Quit DutiUI**
+## How It Works
 
-> **Note**: When you quit DutiUI, automatic protection stops. Associations that were changed while DutiUI was not running will not be restored until you restart.
+DutiUI uses macOS Launch Services API to **query** default app associations and the [duti](https://github.com/moretention/duti) command-line tool to **write** them (macOS doesn't expose a public write API).
 
-## Settings
+```
+File extension → UTI → Default App (read via Launch Services)
+                     → Set App (write via duti)
+                     → Verify (re-read to confirm)
+```
 
-Access settings via the menu bar icon or `DutiUI > Settings…` (`⌘,`).
+The "lock" is **detection-based**, not a system-level block. When another app changes a locked extension, DutiUI detects it on the next check cycle (default 10s) and restores it automatically.
 
-- **Launch at Login**: Automatically start DutiUI after logging in
-- **Check Interval**: How often to check locked associations (5s / 10s / 30s / 60s)
-- **Show Restore Notifications**: Send notifications when associations are auto-restored
+## Building
 
-## Privacy
+```bash
+# Command line
+swift build
+swift run
 
-DutiUI does **not**:
-- Upload any data
-- Read file contents
-- Require Full Disk Access
-- Require Accessibility permissions
-- Require SIP to be disabled
-- Require administrator privileges
-
-It only processes file extension names and default application associations using public macOS APIs and the `duti` command-line tool.
-
-## Limitations
-
-- v1.0 does not show all system UTI types — only user-selected extensions
-- The lock is detection-based, not a system-level block
-- Requires `duti` to be installed separately
-- No Finder extension or Spotlight integration
-- No iCloud sync or multiple profiles
-- Does not determine which specific app changed an association
+# Or use Xcode
+open Package.swift
+```
 
 ## License
 
-MIT License — see [LICENSE](LICENSE) for details.
-
-## Acknowledgments
-
-- [duti](https://github.com/moretension/duti) — the essential tool for setting default apps on macOS
+MIT — see [LICENSE](LICENSE)

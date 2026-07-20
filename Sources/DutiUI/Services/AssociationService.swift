@@ -153,8 +153,10 @@ final class AssociationService: Sendable {
 
     /// 根据 Bundle Identifier 获取应用信息
     private func appInfo(forBundleIdentifier bundleID: String) -> AppInfo? {
-        guard let url = NSWorkspace.shared.urlForApplication(withBundleIdentifier: bundleID) else {
-            // 应用可能已卸载，但 Launch Services 仍有记录
+        // 多种方法尝试找到应用 URL
+        let appURL = findAppURL(forBundleIdentifier: bundleID)
+
+        guard let url = appURL else {
             return AppInfo(
                 name: bundleNameFromIdentifier(bundleID),
                 bundleIdentifier: bundleID,
@@ -165,7 +167,9 @@ final class AssociationService: Sendable {
 
         let name = url.deletingPathExtension().lastPathComponent
         let path = url.path
-        let icon = NSWorkspace.shared.icon(forFile: path)
+
+        // 加载图标：先尝试 NSWorkspace，再尝试从 Bundle 中直接读取
+        let icon = loadAppIcon(from: url)
 
         return AppInfo(
             name: name,
@@ -173,6 +177,98 @@ final class AssociationService: Sendable {
             path: path,
             icon: icon
         )
+    }
+
+    /// 多种方式查找应用 URL
+    private func findAppURL(forBundleIdentifier bundleID: String) -> URL? {
+        // 方法 1：NSWorkspace
+        if let url = NSWorkspace.shared.urlForApplication(withBundleIdentifier: bundleID) {
+            return url
+        }
+        // 方法 2：Launch Services（更可靠）
+        if let urls = LSCopyApplicationURLsForBundleIdentifier(
+            bundleID as CFString, nil
+        )?.takeRetainedValue() as? [URL],
+           let first = urls.first {
+            return first
+        }
+        // 方法 3：遍历 /Applications
+        return findAppInCommonLocations(bundleID: bundleID)
+    }
+
+    /// 在常见目录中查找应用
+    private func findAppInCommonLocations(bundleID: String) -> URL? {
+        let searchDirs = [
+            "/Applications",
+            "/System/Applications",
+            "/System/Applications/Utilities",
+            NSHomeDirectory() + "/Applications",
+        ]
+        for dir in searchDirs {
+            if let url = searchForBundleID(bundleID, in: dir) {
+                return url
+            }
+        }
+        return nil
+    }
+
+    private func searchForBundleID(_ bundleID: String, in directory: String) -> URL? {
+        guard let enumerator = FileManager.default.enumerator(
+            at: URL(fileURLWithPath: directory),
+            includingPropertiesForKeys: nil,
+            options: [.skipsHiddenFiles, .skipsPackageDescendants]
+        ) else { return nil }
+
+        for case let url as URL in enumerator {
+            if url.pathExtension == "app" {
+                if let bundle = Bundle(url: url),
+                   bundle.bundleIdentifier == bundleID {
+                    return url
+                }
+            }
+        }
+        return nil
+    }
+
+    /// 加载应用图标
+    private func loadAppIcon(from appURL: URL) -> NSImage? {
+        let path = appURL.path
+
+        // 先用 NSWorkspace 获取图标
+        let icon = NSWorkspace.shared.icon(forFile: path)
+
+        // 检查是否拿到了有效的非默认图标
+        // NSWorkspace 总是返回非 nil，但可能是通用占位图标
+        if icon.isValid {
+            icon.size = NSSize(width: 32, height: 32)
+            return icon
+        }
+
+        // 备选：直接从 app bundle 的 Info.plist 中查找图标文件名
+        if let bundle = Bundle(url: appURL),
+           let iconFile = (bundle.infoDictionary?["CFBundleIconFile"] as? String)
+                        ?? (bundle.infoDictionary?["CFBundleIconName"] as? String) {
+            // 尝试 .icns 格式
+            if let iconPath = bundle.path(forResource: iconFile, ofType: "icns"),
+               let directIcon = NSImage(contentsOfFile: iconPath) {
+                directIcon.size = NSSize(width: 32, height: 32)
+                return directIcon
+            }
+            // 尝试无扩展名
+            if let iconPath = bundle.path(forResource: iconFile, ofType: nil),
+               let directIcon = NSImage(contentsOfFile: iconPath) {
+                directIcon.size = NSSize(width: 32, height: 32)
+                return directIcon
+            }
+            // 尝试 AppIcon
+            if let iconPath = bundle.path(forResource: "AppIcon", ofType: "icns"),
+               let directIcon = NSImage(contentsOfFile: iconPath) {
+                directIcon.size = NSSize(width: 32, height: 32)
+                return directIcon
+            }
+        }
+
+        return icon
     }
 
     /// 从 Bundle Identifier 推测应用名称（回退方案）

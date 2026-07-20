@@ -27,6 +27,7 @@ final class AppState: ObservableObject {
     @Published var selectedAssociation: ManagedAssociation?
     @Published var editingAssociation: ManagedAssociation?
     @Published var dutiInstalled = false
+    @Published var homebrewInstalled = false
 
     // MARK: - Error State
 
@@ -48,7 +49,8 @@ final class AppState: ObservableObject {
     }
 
     func refreshDutiStatus() {
-        dutiInstalled = DutiDetector.isInstalled()
+        dutiInstalled = DutiDetector.isDutiInstalled()
+        homebrewInstalled = DutiDetector.isHomebrewInstalled()
         associationService.refreshDutiPath()
     }
 

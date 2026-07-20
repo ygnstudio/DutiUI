@@ -54,9 +54,10 @@ struct DutiUIApp: App {
         Window("DutiUI", id: "main") {
             MainWindow()
                 .environmentObject(appState)
+                .frame(minWidth: 680, minHeight: 460)
         }
-        .windowResizability(.contentSize)
-        .defaultSize(width: 780, height: 520)
+        .windowResizability(.contentMinSize)
+        .defaultSize(width: 780, height: 540)
 
         // 设置窗口
         Settings {

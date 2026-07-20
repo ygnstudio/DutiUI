@@ -1,0 +1,29 @@
+# Build artifacts
+.build/
+DerivedData/
+
+# App bundle
+DutiUI.app
+*.app
+
+# Icon artifacts
+DutiUI.iconset/
+DutiUI.icns
+
+# Screenshots
+screenshots/
+
+# macOS
+.DS_Store
+*.swp
+*.swo
+
+# Xcode
+*.xcodeproj
+xcuserdata/
+*.xcworkspace
+
+# IDE
+.vscode/
+.idea/
+.zcode/

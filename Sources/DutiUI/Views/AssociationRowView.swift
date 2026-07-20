@@ -19,9 +19,7 @@ struct AssociationRowView: View {
 
             // 默认应用
             HStack(spacing: 6) {
-                Image(systemName: "app.fill")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
+                appIconView
                 Text(association.targetApplicationName)
                     .font(.body)
             }
@@ -63,6 +61,23 @@ struct AssociationRowView: View {
             }
         }
         .padding(.vertical, 4)
+    }
+
+    // MARK: - App Icon
+
+    @ViewBuilder
+    private var appIconView: some View {
+        if let path = association.targetApplicationPath,
+           FileManager.default.fileExists(atPath: path) {
+            let icon = NSWorkspace.shared.icon(forFile: path)
+            Image(nsImage: icon)
+                .resizable()
+                .frame(width: 18, height: 18)
+        } else {
+            Image(systemName: "app.fill")
+                .font(.caption)
+                .foregroundColor(.secondary)
+        }
     }
 
     // MARK: - Status Badge
