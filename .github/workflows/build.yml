@@ -9,6 +9,8 @@ on:
 jobs:
   build:
     runs-on: macos-latest
+    permissions:
+      contents: write    # Required to create GitHub Releases
 
     steps:
       - name: Checkout
