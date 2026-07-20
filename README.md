@@ -39,7 +39,11 @@ DutiUI detects missing dependencies on launch and provides step-by-step installa
 
 ## Quick Start
 
-### Download & Run
+### Download (Recommended)
+
+Grab the latest `DutiUI.dmg` from [GitHub Releases](https://github.com/ygnstudio/DutiUI/releases), mount it, and drag `DutiUI.app` to `/Applications`.
+
+### Build from Source
 
 ```bash
 git clone https://github.com/ygnstudio/DutiUI.git

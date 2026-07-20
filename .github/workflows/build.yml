@@ -1,0 +1,137 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - 'v*'          # 推送 v1.0, v1.0.0 等 tag 时触发
+  workflow_dispatch:   # 允许手动触发
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build executable
+        run: swift build -c release
+
+      - name: Create app bundle
+        run: |
+          BUILD_DIR=".build/out/Products/Release"
+          APP_NAME="DutiUI"
+          APP_DIR="${APP_NAME}.app"
+
+          mkdir -p "${APP_DIR}/Contents/MacOS"
+          mkdir -p "${APP_DIR}/Contents/Resources"
+
+          # Executable
+          cp "${BUILD_DIR}/${APP_NAME}" "${APP_DIR}/Contents/MacOS/${APP_NAME}"
+          chmod +x "${APP_DIR}/Contents/MacOS/${APP_NAME}"
+
+          # Resources bundle
+          BUNDLE="${BUILD_DIR}/${APP_NAME}_${APP_NAME}.bundle"
+          if [ -d "$BUNDLE" ]; then
+            cp -R "$BUNDLE" "${APP_DIR}/Contents/Resources/"
+          fi
+
+          # App icon
+          if [ -f "AppIcon.icns" ]; then
+            cp AppIcon.icns "${APP_DIR}/Contents/Resources/AppIcon.icns"
+          fi
+
+          # PkgInfo
+          echo -n 'APPL????' > "${APP_DIR}/Contents/PkgInfo"
+
+          # Info.plist
+          cat > "${APP_DIR}/Contents/Info.plist" << 'PLIST'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+              <key>CFBundleDevelopmentRegion</key>
+              <string>zh-Hans</string>
+              <key>CFBundleDisplayName</key>
+              <string>DutiUI</string>
+              <key>CFBundleExecutable</key>
+              <string>DutiUI</string>
+              <key>CFBundleIconFile</key>
+              <string>AppIcon</string>
+              <key>CFBundleIdentifier</key>
+              <string>com.ygnstudio.DutiUI</string>
+              <key>CFBundleInfoDictionaryVersion</key>
+              <string>6.0</string>
+              <key>CFBundleName</key>
+              <string>DutiUI</string>
+              <key>CFBundlePackageType</key>
+              <string>APPL</string>
+              <key>CFBundleShortVersionString</key>
+              <string>${GITHUB_REF_NAME#v}</string>
+              <key>CFBundleVersion</key>
+              <string>1</string>
+              <key>LSMinimumSystemVersion</key>
+              <string>14.0</string>
+              <key>LSUIElement</key>
+              <true/>
+              <key>NSHighResolutionCapable</key>
+              <true/>
+          </dict>
+          </plist>
+          PLIST
+
+          # Ad-hoc code sign
+          codesign --force --deep --sign - "${APP_DIR}"
+
+          echo "✅ App bundle created: ${APP_DIR}"
+
+      - name: Package as DMG
+        run: |
+          APP_DIR="DutiUI.app"
+          DMG_NAME="DutiUI.dmg"
+
+          # Create a temporary directory for DMG contents
+          mkdir -p dmg_contents
+          cp -R "${APP_DIR}" dmg_contents/
+          ln -s /Applications dmg_contents/Applications
+
+          # Create DMG
+          hdiutil create -volname "DutiUI" \
+            -srcfolder dmg_contents \
+            -ov -format UDZO \
+            "${DMG_NAME}"
+
+          echo "✅ DMG created: ${DMG_NAME}"
+          ls -lh "${DMG_NAME}"
+
+      - name: Upload Artifact (DMG)
+        uses: actions/upload-artifact@v4
+        with:
+          name: DutiUI
+          path: DutiUI.dmg
+          retention-days: 30
+
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: DutiUI.dmg
+          body: |
+            ## DutiUI ${{ github.ref_name }}
+
+            A macOS menu bar utility to lock file extensions to specific applications.
+
+            ### Installation
+
+            1. Download `DutiUI.dmg`
+            2. Open the DMG and drag `DutiUI.app` to `/Applications`
+            3. Right-click `DutiUI.app` → Open (first launch)
+            4. Requires [duti](https://github.com/moretension/duti): `brew install duti`
+
+            ### Changes
+
+            - See [commits](https://github.com/${{ github.repository }}/commits/${{ github.ref_name }})
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
