@@ -5,18 +5,15 @@ cd "$(dirname "$0")"
 echo "==> 1/4 Building executable..."
 swift build -c release 2>&1 | tail -2
 
-BUILD_DIR=".build/out/Products/Release"
-if [ ! -f "$BUILD_DIR/DutiUI" ]; then
-    BUILD_DIR=".build/out/Products/Debug"
-fi
-EXEC="$BUILD_DIR/DutiUI"
-BUNDLE="$BUILD_DIR/DutiUI_DutiUI.bundle"
+BIN_DIR=$(swift build --show-bin-path -c release)
+EXEC="$BIN_DIR/DutiUI"
+BUNDLE="$BIN_DIR/DutiUI_DutiUI.bundle"
 
 if [ ! -f "$EXEC" ]; then
-    echo "ERROR: Executable not found"
+    echo "ERROR: Executable not found at $EXEC"
     exit 1
 fi
-echo "   Executable: $EXEC"
+echo "   Binary: $EXEC"
 
 echo "==> 2/4 Generating icon..."
 if [ ! -f "AppIcon.icns" ]; then
