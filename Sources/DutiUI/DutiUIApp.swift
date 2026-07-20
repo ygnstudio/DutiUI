@@ -1,15 +1,27 @@
 import SwiftUI
 import AppKit
 import UserNotifications
+import OSLog
 
-/// 自定义 AppDelegate 处理激活策略等
+let logger = Logger(subsystem: "com.ygnstudio.DutiUI", category: "app")
+
+/// 自定义 AppDelegate 处理通知权限等
 final class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(_ notification: Notification) {
-        // 隐藏 Dock 图标（LSUIElement = true）
-        NSApp.setActivationPolicy(.accessory)
+        logger.info("DutiUI launched")
 
-        // 请求通知权限
-        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { _, _ in }
+        // 安全请求通知权限（在非 bundle 环境下可能失败）
+        if Bundle.main.bundleURL.pathExtension == "app" {
+            UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { granted, error in
+                logger.info("Notifications: granted=\(granted), error=\(String(describing: error))")
+            }
+        } else {
+            logger.warning("Skipping notification auth: not running from .app bundle")
+        }
+    }
+
+    func applicationWillTerminate(_ notification: Notification) {
+        logger.info("DutiUI terminating")
     }
 }
 
@@ -44,10 +56,11 @@ struct DutiUIApp: App {
             }
             .keyboardShortcut("q")
         } label: {
-            Image(systemName: appState.protectionService.isRunning
-                  && !appState.protectionService.isPaused
-                  ? "shield.checkered"
-                  : "shield.slash")
+            // 使用 Text + Image 组合确保始终可见
+            HStack(spacing: 2) {
+                Image(systemName: menuBarIconName)
+                    .font(.system(size: 14))
+            }
         }
 
         // 主窗口
@@ -64,6 +77,13 @@ struct DutiUIApp: App {
             SettingsView()
                 .environmentObject(appState)
         }
+    }
+
+    private var menuBarIconName: String {
+        if appState.protectionService.isRunning && !appState.protectionService.isPaused {
+            return "shield.checkered"
+        }
+        return "shield.slash"
     }
 
     private func openMainWindow() {
