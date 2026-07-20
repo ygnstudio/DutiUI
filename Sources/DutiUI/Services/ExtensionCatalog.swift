@@ -29,19 +29,13 @@ final class ExtensionCatalog: Sendable {
         }
     }
 
-    /// 从多种可能的路径加载资源数据
+    /// 从多种可能的路径加载资源数据（不引用 Bundle.module，避免 fatalError）
     private func loadBuiltinExtensionsData() -> Data? {
         let resourceName = "builtin_extensions"
         let resourceExt = "json"
         let bundleName = "DutiUI_DutiUI"
 
-        // 方法 1：Bundle.module（SPM 编译时路径，仅开发环境有效）
-        if let url = Bundle.module.url(forResource: resourceName, withExtension: resourceExt),
-           let data = try? Data(contentsOf: url) {
-            return data
-        }
-
-        // 方法 2：在主 bundle 的 Resources 目录中查找资源 bundle
+        // 方法 1：在主 bundle 的 Resources 目录中查找资源 bundle
         if let resourcesURL = Bundle.main.resourceURL {
             let bundleURL = resourcesURL.appendingPathComponent("\(bundleName).bundle")
             if let resourceURL = Bundle(url: bundleURL)?.url(forResource: resourceName, withExtension: resourceExt),
@@ -50,13 +44,13 @@ final class ExtensionCatalog: Sendable {
             }
         }
 
-        // 方法 3：在主 bundle 中直接查找
+        // 方法 2：在主 bundle 中直接查找
         if let url = Bundle.main.url(forResource: resourceName, withExtension: resourceExt),
            let data = try? Data(contentsOf: url) {
             return data
         }
 
-        // 方法 4：遍历 Resources 目录查找 .bundle
+        // 方法 3：遍历 Resources 目录查找所有 .bundle
         if let resourcesURL = Bundle.main.resourceURL,
            let contents = try? FileManager.default.contentsOfDirectory(at: resourcesURL, includingPropertiesForKeys: nil) {
             for url in contents where url.pathExtension == "bundle" {
@@ -68,7 +62,7 @@ final class ExtensionCatalog: Sendable {
             }
         }
 
-        print("[ExtensionCatalog] Failed to locate \(resourceName).\(resourceExt) in any bundle location")
+        print("[ExtensionCatalog] Failed to locate \(resourceName).\(resourceExt)")
         return nil
     }
 
